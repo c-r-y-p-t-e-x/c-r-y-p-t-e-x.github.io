@@ -30,9 +30,9 @@ end
 
 | head1        | head two          | three |
 |:-------------|:------------------|:------|
-| rgpmp        |  4g7vw6557qyq52uq | onion |
-| out of stock | good and plenty   | nice  |
-| ok           | dhosting4okcs22v `oreos`      | hmm   |
+| rgpmp        | 4g7vw6557qyq52uq `.onoin` | stat |
+| out of stock | 3fotowqxuwpulhuh `.onion` | nice  |
+| ok           | dhosting4okcs22v `.onion`      | hmm   |
 | ok           | good `zoute` drop | yumm  |
 
 ### There's a horizontal rule below this.
