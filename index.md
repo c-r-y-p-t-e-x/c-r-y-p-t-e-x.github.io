@@ -31,9 +31,9 @@ end
 | head1        | head two          | three |
 |:-------------|:------------------|:------|
 | rgpmp        | 4g7vw6557qyq52uq`.onoin` | JS |
-| out of stock | 3fotowqxuwpulhuh`.onion` | WP  |
-| ok           | dhosting4okcs22v`.onion` | hmm   |
-| ok           | good `zoute` drop | yumm  |
+| user         | 3fotowqxuwpulhuh`.onion` | PHP  |
+| ok 90%       | dhosting4okcs22v`.onion` | hmm   |
+| ok 75%       | hostingr3ohiyhph`.onion` | yumm  |
 
 ### There's a horizontal rule below this.
 
