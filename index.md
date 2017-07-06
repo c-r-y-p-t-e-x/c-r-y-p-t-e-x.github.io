@@ -30,8 +30,8 @@ end
 
 | head1        | head two          | three |
 |:-------------|:------------------|:------|
-| rgpmp        | 4g7vw6557qyq52uq`.onoin` | stat |
-| out of stock | 3fotowqxuwpulhuh`.onion` | nice  |
+| rgpmp        | 4g7vw6557qyq52uq`.onoin` | JS |
+| out of stock | 3fotowqxuwpulhuh`.onion` | WP  |
 | ok           | dhosting4okcs22v`.onion` | hmm   |
 | ok           | good `zoute` drop | yumm  |
 
