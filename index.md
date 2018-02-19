@@ -37,6 +37,7 @@ end
 | user         | 3fotowqxuwpulhuh`.` | PHP  |
 | ok 90%       | dhosting4okcs22v`.` | hmm   |
 | ok 75%       | hostingr3ohiyhph`.` | yumm  |
+| ok 83%       | 5y7zmonbtlqmcwtf`.` | xyz  |
 
 ### There's a horizontal rule below this.
 
