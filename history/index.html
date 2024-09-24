@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Collapsible Timeline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&amp;display=swap'><link rel="stylesheet" href="./style.css">
+  <style>  
+	body { background-color: #17212b; font: 1em / 1.5 "IBM Plex Sans", sans-serif;} ::-webkit-scrollbar { width: 0;}
+</style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<svg display="none">
+	<symbol id="arrow">
+		<polyline points="7 10,12 15,17 10" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+	</symbol>
+</svg>
+<h1>История "ПМ" (Просто Мастер)</h1>
+<div id="timeline" class="timeline">
+	<div class="btn-group">
+		<button class="btn" type="button" data-action="expand">Развернуть</button>
+		<button class="btn" type="button" data-action="collapse">Свернуть</button>
+	</div>
+	<div class="timeline__item">
+		<div class="timeline__item-header">
+			<button class="timeline__arrow" type="button" id="item1" aria-labelledby="item1-name" aria-expanded="false" aria-controls="item1-ctrld" aria-haspopup="true" data-item="1">
+				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+					<use href="#arrow" />
+				</svg>
+			</button>
+			<span class="timeline__dot"></span>
+			<span id="item1-name" class="timeline__meta">
+				<time class="timeline__date" datetime="1970-01-01">2016</time><br>
+				<strong class="timeline__title">Первая версия сайта</strong>
+			</span>
+		</div>
+		<div class="timeline__item-body" id="item1-ctrld" role="region" aria-labelledby="item1" aria-hidden="true">
+			<div class="timeline__item-body-content">
+
+				<img src="1.png" style="width: 100%;">
+
+			</div>
+		</div>
+	</div>
+	<div class="timeline__item">
+		<div class="timeline__item-header">
+			<button class="timeline__arrow" type="button" id="item2" aria-labelledby="item2-name" aria-expanded="false" aria-controls="item2-ctrld" aria-haspopup="true" data-item="2">
+				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+					<use href="#arrow" />
+				</svg>
+			</button>
+			<span class="timeline__dot"></span>
+			<span id="item2-name" class="timeline__meta">
+				<time class="timeline__date" datetime="1973-10-17">2016</time><br>
+				<strong class="timeline__title">Первая версия карты</strong>
+			</span>
+		</div>
+		<div class="timeline__item-body" id="item2-ctrld" role="region" aria-labelledby="item2" aria-hidden="true">
+			<div class="timeline__item-body-content">
+				<img src="2.png" style="width: 100%;">
+			</div>
+		</div>
+	</div>
+	<div class="timeline__item">
+		<div class="timeline__item-header">
+			<button class="timeline__arrow" type="button" id="item3" aria-labelledby="item3-name" aria-expanded="false" aria-controls="item3-ctrld" aria-haspopup="true" data-item="3">
+				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+					<use href="#arrow" />
+				</svg>
+			</button>
+			<span class="timeline__dot"></span>
+			<span id="item3-name" class="timeline__meta">
+				<time class="timeline__date" datetime="2001-09-09">2017</time><br>
+				<strong class="timeline__title">Вторая версия сайта</strong>
+			</span>
+		</div>
+		<div class="timeline__item-body" id="item3-ctrld" role="region" aria-labelledby="item3" aria-hidden="true">
+			<div class="timeline__item-body-content">
+				<img src="3.png" style="width: 100%;">
+				<img src="4.png" style="width: 100%;">
+				<img src="5.png" style="width: 100%;">
+				<img src="6.png" style="width: 100%;">
+			</div>
+		</div>
+	</div>
+	<div class="timeline__item">
+		<div class="timeline__item-header">
+			<button class="timeline__arrow" type="button" id="item4" aria-labelledby="item4-name" aria-expanded="false" aria-controls="item4-ctrld" aria-haspopup="true" data-item="4">
+				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+					<use href="#arrow" />
+				</svg>
+			</button>
+			<span class="timeline__dot"></span>
+			<span id="item4-name" class="timeline__meta">
+				<time class="timeline__date" datetime="2009-02-13">2017</time><br>
+				<strong class="timeline__title">Вторая версия карты</strong>
+			</span>
+		</div>
+		<div class="timeline__item-body" id="item4-ctrld" role="region" aria-labelledby="item4" aria-hidden="true">
+			<div class="timeline__item-body-content">
+				<img src="7.png" style="width: 100%;">
+				<img src="8.png" style="width: 100%;">
+			</div>
+		</div>
+	</div>
+	<div class="timeline__item">
+		<div class="timeline__item-header">
+			<button class="timeline__arrow" type="button" id="item5" aria-labelledby="item5-name" aria-expanded="false" aria-controls="item5-ctrld" aria-haspopup="true" data-item="5">
+				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+					<use href="#arrow" />
+				</svg>
+			</button>
+			<span class="timeline__dot"></span>
+			<span id="item5-name" class="timeline__meta">
+				<time class="timeline__date" datetime="2033-05-18">2024</time><br>
+				<strong class="timeline__title">Первая версия приложения</strong>
+			</span>
+		</div>
+		<div class="timeline__item-body" id="item5-ctrld" role="region" aria-labelledby="item5" aria-hidden="true">
+			<div class="timeline__item-body-content">
+				<img src="screen1.png" style="width: 100%;">
+				<img src="screen3.png" style="width: 100%;">
+				<img src="screen2.png" style="width: 100%;">
+		
+			</div>
+		</div>
+	</div>
+	<div class="timeline__item">
+		<div class="timeline__item-header">
+			<button class="timeline__arrow" type="button" id="item6" aria-labelledby="item6-name" aria-expanded="false" aria-controls="item6-ctrld" aria-haspopup="true" data-item="6">
+				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+					<use href="#arrow" />
+				</svg>
+			</button>
+			<span class="timeline__dot"></span>
+			<span id="item6-name" class="timeline__meta">
+				<time class="timeline__date" datetime="2038-01-19">2024</time><br>
+				<strong class="timeline__title">Сбор задач, мониторинг состояния / выполнения. Таймеры и статистика текущих задач.</strong>
+			</span>
+		</div>
+		<div class="timeline__item-body" id="item6-ctrld" role="region" aria-labelledby="item6" aria-hidden="true">
+			<div class="timeline__item-body-content">
+				<img src="screen6.png" style="width: 100%;">
+				<img src="screen4.png" style="width: 100%;">
+				<img src="screen5.png" style="width: 100%;">
+				<img src="screen7.png" style="width: 100%;">
+			</div>
+		</div>
+	</div>
+
+
+	<div class="timeline__item">
+		<div class="timeline__item-header">
+			<button class="timeline__arrow" type="button" id="item7" aria-labelledby="item7-name" aria-expanded="false" aria-controls="item6-ctrld" aria-haspopup="true" data-item="7">
+				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+					<use href="#arrow" />
+				</svg>
+			</button>
+			<span class="timeline__dot"></span>
+			<span id="item7-name" class="timeline__meta">
+				<time class="timeline__date" datetime="2038-01-19">2024</time><br>
+				<strong class="timeline__title">Франшиза</strong>
+			</span>
+		</div>
+		<div class="timeline__item-body" id="item7-ctrld" role="region" aria-labelledby="item7" aria-hidden="true">
+			<div class="timeline__item-body-content">
+				<!--
+				<img src="screen6.png" style="width: 100%;">
+				<img src="screen4.png" style="width: 100%;">
+				<img src="screen5.png" style="width: 100%;">
+				<img src="screen7.png" style="width: 100%;">
+			    -->
+			</div>
+		</div>
+	</div>
+
+
+</div>
+<!-- partial -->
+
+
+<center>
+	<a href="page.html" style="text-decoration: unset;color: white;">
+<h1 style="
+background-color: white;
+color: black;
+padding: unset;
+width: 13%;
+border-radius: 10px;
+font-size: 1.5em;
+">+ материалы</h1>
+	</a>
+	</center>
+
+
+
+
+  <script  src="./script.js"></script>
+
+</body>
+</html>
