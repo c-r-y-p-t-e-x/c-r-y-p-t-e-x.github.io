@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Fertilizer Calculator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    </head>
+    <body>
+        <h2 style="text-align: center;color: #4CAF50;padding: 10px;">Fertilizer Calculator</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="sel1">Crop</label>
+                        <select class="form-control" id="drop1">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="sel1">Yield</label>
+                        <select class="form-control" id="drop2">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="usr">Enter Value Of Soil Nitrogen:</label>
+                        <input type="text" class="form-control" id="sn">
+                    </div>
+                    <div class="form-group">
+                        <label for="usr">Enter Value Of Soil Phosphorus:</label>
+                        <input type="text" class="form-control" id="sp">
+                    </div>
+                    <div class="form-group">
+                        <label for="usr">Enter Value Of Soil Potassium:</label>
+                        <input type="text" class="form-control" id="sk">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="col-sm-12">Values  Of Z1: <span id="snv"></span></div>
+                    <div class="col-sm-12">Values  Of Z2: <span id="snp"></span></div>
+                    <div class="col-sm-12">Values  Of Z3: <span id="snk"></span></div>
+                </div>
+				
+				<div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="sel1">FN</label>
+                        <select class="form-control" id="drop3">
+                        </select>
+                    </div>
+                </div>
+				<div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="sel1">FP</label>
+                        <select class="form-control" id="drop4">
+                        </select>
+                    </div>
+                </div>
+				<div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="sel1">FK</label>
+                        <select class="form-control" id="drop5">
+                        </select>
+                    </div>
+                </div>
+				
+				<div class="col-sm-4">
+                    <div class="col-sm-12">Values  Of N Fertilizer: <span id="n_value"></span></div>
+                    <div class="col-sm-12">Values  Of P Fertilizer: <span id="p_value"></span></div>
+                    <div class="col-sm-12">Values  Of K Fertilizer: <span id="k_value"></span></div>
+                </div>
+            </div>
+        </div>
+		
+        <script>
+           			
+		$(window).load(function(){
+				$.getJSON("drop1.json", function (json) {
+					var party = json;
+					content = '<option value="" disabled selected>Choose Option</option>';
+					for (var i = 0; i < party.length; i++) {
+						content += '<option value="' + party[i].num + '">' + party[i].value + '</option>';
+					}
+					$("#drop1").html(content);
+
+				});
+				$("#drop1").change(function () {
+					var selecteVal = this.value;
+					$("#drop2").html("");
+					$.getJSON('drop2.json', function (data) {
+						var contents = '';
+						for (var i = 0; i < data.length; i++) {
+							if (data[i].drop1Id == selecteVal) {
+								contents += '<option value="' + data[i].value + '">' + data[i].value + '</option>';
+							}
+						}
+						$("#drop2").html(contents);
+					});
+				
+				});
+				$("#sn").val("");
+				$("#sp").val("");
+				$("#sk").val("");
+				$("#snv").html("");
+				$("#snp").html("");
+				$("#snk").html("");
+		});
+			
+	$(document).ready(function () {
+				$("#drop2").on("change", function(event){
+					$("#sn").val("");
+					$("#sp").val("");
+					$("#sk").val("");
+					$("#snv").html("");
+					$("#snp").html("");
+					$("#snk").html("");
+				
+				});
+			
+                $("#sn").keyup(function () {
+                    var sn = this.value;
+					if(sn.length < 1)
+					{
+						$("#snv").html("");
+						$("#drop3").html("");
+					}
+					else
+					{
+						calculateSN($("#drop1").val(), $("#drop2").val(), sn);
+					}                    
+                });
+                $("#sp").keyup(function () {
+                    var sp = this.value;
+					if(sp.length < 1)
+					{
+						$("#snp").html("");
+						$("#drop4").html("");
+					}
+					else
+					{
+						calculateSP($("#drop1").val(), $("#drop2").val(), sp);
+					}                    
+                });
+                $("#sk").keyup(function () {
+                    var sk = this.value;
+					if(sk.length < 1)
+					{
+						$("#snk").html("");
+						$("#drop5").html("");
+					}
+					else
+					{
+						calculateSK($("#drop1").val(), $("#drop2").val(), sk);
+					}   
+                    
+                });
+            
+            function calculateSN(first, second, sn) {
+				second = second.substr(0, second.indexOf(" "));
+                switch (first) {
+                    case "1":
+                       var value=4.74*second-0.49*sn;
+                       $("#snv").html(value);
+                        break;
+                    case "2":
+						var value=31.9*second-0.22*sn;
+						$("#snv").html(value);
+                        break;
+                    case "3":
+						var value=31.9*second-0.228*sn;
+						$("#snv").html(value);
+                        break;
+                    case "4":
+						var value=144.8*second-1.365*sn;
+						$("#snv").html(value);
+                        break;
+                    case "5":
+						var value=4.67*second-0.28*sn;
+						$("#snv").html(value);
+                        break;
+                    case "6":
+						var value=4.35*second-0.155*sn;
+						$("#snv").html(value);
+                        break;
+                    case "7":
+						var value=12.27*second-0.56*sn;
+						$("#snv").html(value);
+                        break;
+                }
+				
+				var i = document.getElementById('snv').innerHTML;
+				if (i.length > 1)
+					{
+						$.getJSON("drop3.json", function (json) {
+						var fndd = json;
+						content = '<option value="" disabled selected>Choose Option</option>';
+						for (var i = 0; i < fndd.length; i++) {
+							content += '<option value="' + fndd[i].value + '">' + fndd[i].Name + '</option>';
+						}
+						$("#drop3").html(content);
+						});
+					}
+					
+            }
+            function calculateSP(first, second, sp) {
+				second = second.substr(0, second.indexOf(" "));
+                switch (first) {
+                    case "1":
+                      var value=(1.53*second-1.41*sp);
+                      $("#snp").html(value);
+                        break;
+                    case "2":
+						var value=((31.6*second)-(6.13*sp))*2.29;
+						$("#snp").html(value);
+                        break;
+                    case "3":
+						var value=((31.6*second)-(6.13*sp))*2.29;
+						$("#snp").html(value);
+                        break;
+                    case "4":
+						var value=(48.7*second)-(9.73*sp);
+						$("#snp").html(value);
+                        break;
+                    case "5":
+						var value=(2.32*second)-(1.67*sp);
+						$("#snp").html(value);
+                        break;
+                    case "6":
+						var value=(7.23*second)-(2.7*sp);
+						$("#snp").html(value);
+                        break;
+                    case "7":
+						var value=(4.6*second)-(3.29*sp);
+						$("#snp").html(value);
+                        break;
+                }
+				
+				var j = document.getElementById('snp').innerHTML;
+				if (j.length > 1)
+					{
+						$.getJSON("drop4.json", function (json) {
+						var fpdd = json;
+						content = '<option value="" disabled selected>Choose Option</option>';
+						for (var i = 0; i < fpdd.length; i++) {							
+							content += '<option value="' + fpdd[i].value + '">' + fpdd[i].Name + '</option>';
+						}
+						$("#drop4").html(content);
+						});
+					}
+            }
+            function calculateSK(first, second, sk) {
+				second = second.substr(0, second.indexOf(" "));
+                switch (first) {
+                    case "1":
+                       var value=(2.92*second)-(0.35*sk);
+                       $("#snk").html(value);
+                        break;
+                    case "2":
+						var value=((14.5*second)-(0.185*sk))*1.2;
+						$("#snk").html(value);
+                        break;
+                    case "3":
+						var value=((14.5*second)-(0.185*sk))*1.2;
+						$("#snk").html(value);
+                        break;
+                    case "4":
+						var value=(72.4*second)-(0.91*sk);
+						$("#snk").html(value);
+                        break;
+                    case "5":
+						var value=(3.7*second)-(0.24*sk);
+						$("#snk").html(value);
+                        break;
+                    case "6":
+						var value=(6.5*second)-(0.24*sk);
+						$("#snk").html(value);
+                        break;
+                    case "7":
+						var value=(4.69*second)-(0.24*sk);
+						$("#snk").html(value);
+                        break;
+                }
+				
+				var j = document.getElementById('snk').innerHTML;
+				if (j.length > 1)
+					{
+						$.getJSON("drop5.json", function (json) {
+						var fkdd = json;
+						content = '<option value="" disabled selected>Choose Option</option>';
+						for (var i = 0; i < fkdd.length; i++) {
+							content += '<option value="' + fkdd[i].value + '">' + fkdd[i].Name + '</option>';
+						}
+						$("#drop5").html(content);
+						});
+					}
+            }
+			
+			$("#drop3").on("change", function(event){
+					$("#n_value").val("");
+					if($("#drop4").val() == 46)
+					{
+						var y = 100*((document.getElementById('snv').innerHTML)-((document.getElementById('p_value').innerHTML)*18/100))/$("#drop3").val();
+						$("#n_value").html(y);
+					}
+					else
+						$("#n_value").html((document.getElementById('snv').innerHTML)*100/this.value);			
+				
+			});
+				
+			$("#drop4").on("change", function(event){
+					$("#p_value").val("");
+					if(this.value == 46)
+					{
+						$("#n_value").html("");
+						var x = (document.getElementById('snp').innerHTML)*100/this.value;
+						var y = 100*((document.getElementById('snv').innerHTML)-(x*18/100))/$("#drop3").val();
+						$("#n_value").html(y);
+						$("#p_value").html(x);
+					}
+					
+					$("#p_value").html((document.getElementById('snp').innerHTML)*100/this.value);			
+				
+			});
+			
+			$("#drop5").on("change", function(event){
+					$("#k_value").val("");
+					$("#k_value").html((document.getElementById('snk').innerHTML)*100/this.value);		
+				
+			});
+           
+    });
+        </script>
+    </body>
+</html>

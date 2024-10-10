@@ -1,0 +1,30 @@
+[
+   {
+      "num":"1",
+      "value":"RICE"
+   },
+   {
+      "num":"2",
+      "value":"WHEAT"
+   },
+   {
+      "num":"3",
+      "value":"BARLEY"
+   },
+   {
+      "num":"4",
+      "value":"MAIZE"
+   },
+   {
+      "num":"5",
+      "value":"LENTIL"
+   },
+   {
+      "num":"6",
+      "value":"CHICKPEA"
+   },
+   {
+      "num":"7",
+      "value":"MUSTARD"
+   }
+]

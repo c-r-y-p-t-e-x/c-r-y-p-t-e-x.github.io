@@ -1,0 +1,132 @@
+[
+    {
+        "drop1Id": "1",
+        "num": "1",
+        "value": "30 Q"
+    },
+    {
+        "drop1Id": "1",
+        "num": "2",
+        "value": "35 Q"
+    },
+    {
+        "drop1Id": "1",
+        "num": "3",
+        "value": "40 Q"
+    },
+    {
+        "drop1Id": "1",
+        "num": "4",
+        "value": "45 Q"
+    },
+    {
+        "drop1Id": "2",
+        "num": "1",
+        "value": "3.5 T"
+    },
+    {
+        "drop1Id": "2",
+        "num": "2",
+        "value": "4 T"
+    },
+    {
+        "drop1Id": "2",
+        "num": "3",
+        "value": "4.5 T"
+    },
+    {
+        "drop1Id": "2",
+        "num": "4",
+        "value": "5 T"
+    },
+    {
+        "drop1Id": "3",
+        "num": "1",
+        "value": "2.5 T"
+    },
+    {
+        "drop1Id": "3",
+        "num": "2",
+        "value": "2.8 T"
+    },
+    {
+        "drop1Id": "3",
+        "num": "3",
+        "value": "3 T"
+    },
+    {
+        "drop1Id": "4",
+        "num": "1",
+        "value": "1.8 T"
+    },
+    {
+        "drop1Id": "4",
+        "num": "2",
+        "value": "2 T"
+    },
+    {
+        "drop1Id": "4",
+        "num": "2",
+        "value": "2.3 T"
+    },
+    {
+        "drop1Id": "4",
+        "num": "2",
+        "value": "2.6 T"
+    },
+    {
+        "drop1Id": "5",
+        "num": "1",
+        "value": "12 Q"
+    },
+    {
+        "drop1Id": "5",
+        "num": "2",
+        "value": "13 Q"
+    },
+    {
+        "drop1Id": "5",
+        "num": "3",
+        "value": "14 Q"
+    },
+    {
+        "drop1Id": "5",
+        "num": "4",
+        "value": "15 Q"
+    },
+    {
+        "drop1Id": "6",
+        "num": "1",
+        "value": "11 Q"
+    },
+    {
+        "drop1Id": "6",
+        "num": "2",
+        "value": "12.5 Q"
+    },
+    {
+        "drop1Id": "6",
+        "num": "3",
+        "value": "14 Q"
+    },
+    {
+        "drop1Id": "6",
+        "num": "4",
+        "value": "16 Q"
+    },
+    {
+        "drop1Id": "7",
+        "num": "1",
+        "value": "14.5 Q"
+    },
+    {
+        "drop1Id": "7",
+        "num": "2",
+        "value": "15.5 Q"
+    },
+    {
+        "drop1Id": "7",
+        "num": "3",
+        "value": "17 Q"
+    }
+]
