@@ -1,294 +1,1222 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-  <meta charset="UTF-8">
-  <title>история</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&amp;display=swap"><link rel="stylesheet" href="./style.css">
-  <style>  
-	body { background-color: #17212b; font: 1em / 1.5 "IBM Plex Sans", sans-serif;} ::-webkit-scrollbar { width: 0;}
-</style>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>История «ПМ» (Просто Мастер)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700;900&display=swap">
+    <style>
+        :root {
+            --bg: #06070f;
+            --bg-card: rgba(18, 20, 40, 0.7);
+            --text: #e8e8f0;
+            --text-secondary: #b0b0c8;
+            --accent-1: #4facfe;
+            --accent-2: #00f2fe;
+            --accent-3: #a78bfa;
+            --accent-4: #f472b6;
+            --glow-1: rgba(79, 172, 254, 0.5);
+            --glow-2: rgba(0, 242, 254, 0.4);
+            --glow-3: rgba(167, 139, 250, 0.4);
+            --line-gradient: linear-gradient(180deg, #4facfe, #a78bfa, #f472b6, #4facfe);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --transition-smooth: cubic-bezier(0.22, 0.61, 0.36, 1);
+            --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+        html::-webkit-scrollbar {
+            width: 0;
+            display: none;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'IBM Plex Sans', sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            cursor: default;
+        }
+
+        /* Прогресс-бар */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-4));
+            z-index: 10000;
+            border-radius: 0 3px 3px 0;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 20px var(--glow-1), 0 0 40px var(--glow-2);
+        }
+
+        /* Фоновые орбы */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+        .bg-orb.orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79, 172, 254, 0.35) 0%, transparent 70%);
+            top: -200px;
+            left: -150px;
+            animation-delay: 0s;
+            animation-duration: 22s;
+        }
+        .bg-orb.orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%);
+            bottom: -180px;
+            right: -120px;
+            animation-delay: -7s;
+            animation-duration: 18s;
+        }
+        .bg-orb.orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(244, 114, 182, 0.25) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+            animation-duration: 25s;
+        }
+        @keyframes orbFloat {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(60px, -40px) scale(1.1);
+            }
+            50% {
+                transform: translate(-30px, 50px) scale(0.9);
+            }
+            75% {
+                transform: translate(-50px, -30px) scale(1.05);
+            }
+        }
+
+        /* Канвас для частиц */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Контент */
+        .page-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+
+        /* Заголовок */
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s var(--transition-smooth) both;
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 0%, #c0d0ff 40%, #e0c0ff 70%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            line-height: 1.2;
+            animation: shimmer 4s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.3);
+            }
+        }
+        .hero .subtitle-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            margin-bottom: 24px;
+        }
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            text-align: center;
+            max-width: 750px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            animation: fadeInUp 1s var(--transition-smooth) 0.2s both;
+        }
+        .hero-card h2 {
+            font-size: 1.05rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .hero-card h2 strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Кнопки управления */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 40px 0 30px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s var(--transition-smooth) 0.4s both;
+        }
+        .btn {
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.35s var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            opacity: 0;
+            transition: opacity 0.35s var(--transition-smooth);
+            border-radius: 50px;
+            z-index: -1;
+        }
+        .btn:hover {
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(79, 172, 254, 0.3);
+        }
+        .btn:hover::before {
+            opacity: 1;
+        }
+        .btn:active {
+            transform: scale(0.96);
+            transition: transform 0.15s var(--transition-smooth);
+        }
+
+        /* Таймлайн */
+        .timeline {
+            position: relative;
+            padding-left: 48px;
+        }
+        /* Линия */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            border-radius: 3px;
+            background: var(--line-gradient);
+            background-size: 100% 300%;
+            animation: lineFlow 8s ease-in-out infinite;
+            box-shadow: 0 0 15px var(--glow-1), 0 0 40px rgba(167, 139, 250, 0.3);
+            z-index: 0;
+        }
+        @keyframes lineFlow {
+            0%,
+            100% {
+                background-position: 0% 0%;
+            }
+            25% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 0% 100%;
+            }
+            75% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Элемент таймлайна */
+        .timeline__item {
+            position: relative;
+            margin-bottom: 32px;
+            z-index: 1;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth);
+        }
+        .timeline__item.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .timeline__item-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.4s var(--transition-smooth);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+        .timeline__item-header:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(79, 172, 254, 0.15);
+            transform: translateY(-2px);
+        }
+        .timeline__item.expanded .timeline__item-header {
+            border-color: rgba(167, 139, 250, 0.4);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(167, 139, 250, 0.2);
+            background: rgba(25, 22, 50, 0.8);
+        }
+
+        /* Точка на линии */
+        .timeline__dot {
+            position: absolute;
+            left: -37px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 12px var(--glow-1), 0 0 30px var(--glow-2), 0 0 50px rgba(79, 172, 254, 0.6);
+            z-index: 3;
+            transition: all 0.5s var(--transition-smooth);
+            animation: dotPulse 3s ease-in-out infinite;
+        }
+        .timeline__item.expanded .timeline__dot {
+            box-shadow: 0 0 20px var(--glow-3), 0 0 45px rgba(167, 139, 250, 0.8), 0 0 70px rgba(244, 114, 182, 0.5);
+            width: 20px;
+            height: 20px;
+            left: -39px;
+            animation: dotPulseActive 1.5s ease-in-out infinite;
+        }
+        @keyframes dotPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 12px var(--glow-1), 0 0 30px var(--glow-2), 0 0 50px rgba(79, 172, 254, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 18px var(--glow-1), 0 0 40px var(--glow-2), 0 0 65px rgba(79, 172, 254, 0.8);
+            }
+        }
+        @keyframes dotPulseActive {
+            0%,
+            100% {
+                box-shadow: 0 0 20px var(--glow-3), 0 0 45px rgba(167, 139, 250, 0.8), 0 0 70px rgba(244, 114, 182, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px var(--glow-3), 0 0 60px rgba(167, 139, 250, 1), 0 0 90px rgba(244, 114, 182, 0.7);
+            }
+        }
+
+        /* Стрелка */
+        .timeline__arrow {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s var(--transition-smooth);
+            color: #fff;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .timeline__arrow:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+        }
+        .timeline__arrow-icon {
+            transition: transform 0.5s var(--transition-spring);
+            width: 20px;
+            height: 20px;
+        }
+        .timeline__item.expanded .timeline__arrow-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Мета-информация */
+        .timeline__meta {
+            flex: 1;
+            min-width: 0;
+        }
+        .timeline__date {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--accent-2);
+            background: rgba(0, 242, 254, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 2px;
+        }
+        .timeline__title {
+            display: block;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        /* Тело элемента */
+        .timeline__item-body {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.6s var(--transition-smooth), opacity 0.4s var(--transition-smooth), margin 0.5s var(--transition-smooth);
+            margin-top: 0;
+            border-radius: 0 0 16px 16px;
+            background: rgba(15, 13, 30, 0.5);
+            border: 0px solid transparent;
+            border-top: none;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .timeline__item.expanded .timeline__item-body {
+            opacity: 1;
+            margin-top: -4px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: none;
+            max-height: 3000px;
+        }
+        .timeline__item-body-content {
+            padding: 24px 20px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+        .timeline__item-body-content img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px;
+            object-fit: cover;
+            transition: all 0.5s var(--transition-smooth);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            flex: 1 1 280px;
+            min-width: 240px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .timeline__item-body-content img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(79, 172, 254, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .timeline__item-body-content a {
+            flex: 1 1 280px;
+            min-width: 240px;
+            max-width: 400px;
+            display: block;
+            text-decoration: none;
+        }
+        .timeline__item-body-content .text-block {
+            flex: 1 1 100%;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            padding: 8px 4px;
+        }
+        .timeline__item-body-content .text-block span {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .timeline__item-body-content .highlight-stat {
+            font-weight: 900;
+            font-size: 1.8em;
+            color: #fff;
+            display: block;
+            margin: 4px 0;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Текстовый блок франшизы */
+        .franchise-text {
+            color: #d0d0e0;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            padding: 8px 4px;
+            width: 100%;
+        }
+        .franchise-text .big-stat {
+            font-weight: 900;
+            font-size: 1.6em;
+            display: block;
+            margin: 8px 0;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+        .franchise-text p {
+            margin-bottom: 12px;
+        }
+
+        /* CTA кнопка */
+        .cta-wrapper {
+            text-align: center;
+            margin-top: 50px;
+            animation: fadeInUp 1s var(--transition-smooth) 0.6s both;
+        }
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #fff;
+            color: #000;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.5s var(--transition-spring);
+            box-shadow: 0 20px 50px rgba(255, 255, 255, 0.25), 0 0 60px rgba(79, 172, 254, 0.4);
+            position: relative;
+            animation: ctaPulse 2.5s ease-in-out infinite;
+        }
+        .cta-button:hover {
+            transform: scale(1.12);
+            box-shadow: 0 25px 60px rgba(255, 255, 255, 0.4), 0 0 80px rgba(167, 139, 250, 0.6);
+        }
+        .cta-button:active {
+            transform: scale(0.9);
+            transition: transform 0.2s var(--transition-smooth);
+        }
+        @keyframes ctaPulse {
+            0%,
+            100% {
+                box-shadow: 0 20px 50px rgba(255, 255, 255, 0.25), 0 0 60px rgba(79, 172, 254, 0.4);
+            }
+            50% {
+                box-shadow: 0 20px 60px rgba(255, 255, 255, 0.4), 0 0 90px rgba(167, 139, 250, 0.65), 0 0 120px rgba(244, 114, 182, 0.3);
+            }
+        }
+
+        /* SVG-символы скрыты */
+        .hidden-svg {
+            display: none;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .page-content {
+                padding: 40px 16px 60px;
+            }
+            .timeline {
+                padding-left: 38px;
+            }
+            .timeline::before {
+                left: 14px;
+                width: 2px;
+            }
+            .timeline__dot {
+                left: -30px;
+                width: 13px;
+                height: 13px;
+            }
+            .timeline__item.expanded .timeline__dot {
+                left: -31px;
+                width: 16px;
+                height: 16px;
+            }
+            .timeline__item-header {
+                padding: 10px 12px;
+                gap: 10px;
+                border-radius: 12px;
+            }
+            .timeline__arrow {
+                width: 30px;
+                height: 30px;
+            }
+            .timeline__title {
+                font-size: 0.9rem;
+            }
+            .timeline__item-body-content img {
+                max-width: 100%;
+                min-width: 100%;
+                flex: 1 1 100%;
+            }
+            .timeline__item-body-content a {
+                max-width: 100%;
+                flex: 1 1 100%;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .hero-card h2 {
+                font-size: 0.9rem;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timeline {
+                padding-left: 30px;
+            }
+            .timeline::before {
+                left: 10px;
+            }
+            .timeline__dot {
+                left: -24px;
+                width: 10px;
+                height: 10px;
+            }
+            .timeline__item.expanded .timeline__dot {
+                left: -25px;
+                width: 13px;
+                height: 13px;
+            }
+            .timeline__item-header {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+            .timeline__arrow {
+                width: 26px;
+                height: 26px;
+            }
+            .timeline__title {
+                font-size: 0.8rem;
+            }
+            .timeline__date {
+                font-size: 0.7rem;
+                padding: 2px 8px;
+            }
+        }
+    </style>
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<svg display="none">
-	<symbol id="arrow">
-		<polyline points="7 10,12 15,17 10" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline>
-	</symbol>
-</svg>
-<h1>История "ПМ" (Просто Мастер)</h1>
-<center style="
-    /* width: 65%; */
-    padding: 68px;
-    margin-top: -110px;
-"><h2 style="
-    text-align: center;
-">Цель данного сервиса и мастера выполнить Вашу работу по привлекательной цене, удобно, качественно и в шаговой доступности. <br>
- В большинстве случаев меньше среднерыночной цены «частного мастера с объявления». <br>
- Отправляете Задание в приложении (описание, фото) <br>
- Мастер получает Задание Созванивается с Вами и предварительно озвучивает стоимость работ <br>
- На месте подтверждает стоимость и выполняет работу</h2></center>
-<div id="timeline" class="timeline">
-	<div class="btn-group">
-		<button class="btn" type="button" data-action="expand">Развернуть</button>
-		<button class="btn" type="button" data-action="collapse">Свернуть</button>
-	</div>
-	<div class="timeline__item">
-		<div class="timeline__item-header">
-			<button class="timeline__arrow" type="button" id="item1" aria-labelledby="item1-name" aria-expanded="false" aria-controls="item1-ctrld" aria-haspopup="true" data-item="1">
-				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
-					<use href="#arrow"></use>
-				</svg>
-			</button>
-			<span class="timeline__dot"></span>
-			<span id="item1-name" class="timeline__meta">
-				<time class="timeline__date" datetime="1970-01-01">2016</time><br>
-				<strong class="timeline__title">Первая версия сайта</strong>
-			</span>
-		</div>
-		<div class="timeline__item-body" id="item1-ctrld" role="region" aria-labelledby="item1" aria-hidden="true">
-			<div class="timeline__item-body-content">
 
-<a href="1.png">				
-<img src="1.png" style="width: 100%;">
-</a>
+    <!-- Прогресс-бар -->
+    <div id="progress-bar"></div>
 
-			</div>
-		</div>
-	</div>
-	<div class="timeline__item">
-		<div class="timeline__item-header">
-			<button class="timeline__arrow" type="button" id="item2" aria-labelledby="item2-name" aria-expanded="false" aria-controls="item2-ctrld" aria-haspopup="true" data-item="2">
-				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
-					<use href="#arrow"></use>
-				</svg>
-			</button>
-			<span class="timeline__dot"></span>
-			<span id="item2-name" class="timeline__meta">
-				<time class="timeline__date" datetime="1973-10-17">2016</time><br>
-				<strong class="timeline__title">Первая версия карты</strong>
-			</span>
-		</div>
-		<div class="timeline__item-body" id="item2-ctrld" role="region" aria-labelledby="item2" aria-hidden="true">
-			<div class="timeline__item-body-content">
-<a href="2.png">
-				<img src="2.png" style="width: 100%;">
-</a>	
-		</div>
-		</div>
-	</div>
-	<div class="timeline__item">
-		<div class="timeline__item-header">
-			<button class="timeline__arrow" type="button" id="item3" aria-labelledby="item3-name" aria-expanded="false" aria-controls="item3-ctrld" aria-haspopup="true" data-item="3">
-				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
-					<use href="#arrow"></use>
-				</svg>
-			</button>
-			<span class="timeline__dot"></span>
-			<span id="item3-name" class="timeline__meta">
-				<time class="timeline__date" datetime="2001-09-09">2017</time><br>
-				<strong class="timeline__title">Вторая версия сайта</strong>
-			</span>
-		</div>
-		<div class="timeline__item-body" id="item3-ctrld" role="region" aria-labelledby="item3" aria-hidden="true">
-			<div class="timeline__item-body-content">
-<a href="3.png">
-				<img src="3.png" style="width: 100%;">
-</a>
-<a href="4.png">
-				<img src="4.png" style="width: 100%;">
-</a>
-<a href="5.png">
-				<img src="5.png" style="width: 100%;">
-</a>
-<a href="6.png">
-				<img src="6.png" style="width: 100%;">
-</a>
-			</div>
-		</div>
-	</div>
-	<div class="timeline__item">
-		<div class="timeline__item-header">
-			<button class="timeline__arrow" type="button" id="item4" aria-labelledby="item4-name" aria-expanded="false" aria-controls="item4-ctrld" aria-haspopup="true" data-item="4">
-				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
-					<use href="#arrow"></use>
-				</svg>
-			</button>
-			<span class="timeline__dot"></span>
-			<span id="item4-name" class="timeline__meta">
-				<time class="timeline__date" datetime="2009-02-13">2017</time><br>
-				<strong class="timeline__title">Вторая версия карты</strong>
-			</span>
-		</div>
-		<div class="timeline__item-body" id="item4-ctrld" role="region" aria-labelledby="item4" aria-hidden="true">
-			<div class="timeline__item-body-content">
-                            <!-- <a href="7.png">
-				<img src="7.png" style="width: 100%;">
-                              </a>-->	
-                         <a href="8.png">
-			<img src="8.png" style="width: 100%;">
-                         </a>	
-		</div>
-		</div>
-	</div>
-	<div class="timeline__item">
-		<div class="timeline__item-header">
-			<button class="timeline__arrow" type="button" id="item5" aria-labelledby="item5-name" aria-expanded="false" aria-controls="item5-ctrld" aria-haspopup="true" data-item="5">
-				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
-					<use href="#arrow"></use>
-				</svg>
-			</button>
-			<span class="timeline__dot"></span>
-			<span id="item5-name" class="timeline__meta">
-				<time class="timeline__date" datetime="2033-05-18">2024</time><br>
-				<strong class="timeline__title">Первая версия приложения</strong>
-			</span>
-		</div>
-		<div class="timeline__item-body" id="item5-ctrld" role="region" aria-labelledby="item5" aria-hidden="true">
-			<div class="timeline__item-body-content">
-<a href="screen1.png">
-				<img src="screen1.png" style="width: 100%;">
-</a>
-<a href="screen2.png">
-				<img src="screen3.png" style="width: 100%;">
-</a>
-<a href="screen3.png">			
-	<img src="screen2.png" style="width: 100%;">
-</a>
-<a href="15.jpg">			
-	<img src="15.jpg" style="width: 100%;">
-</a>
-		
-			</div>
-		</div>
-	</div>
-	<div class="timeline__item">
-		<div class="timeline__item-header">
-			<button class="timeline__arrow" type="button" id="item6" aria-labelledby="item6-name" aria-expanded="false" aria-controls="item6-ctrld" aria-haspopup="true" data-item="6">
-				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
-					<use href="#arrow"></use>
-				</svg>
-			</button>
-			<span class="timeline__dot"></span>
-			<span id="item6-name" class="timeline__meta">
-				<time class="timeline__date" datetime="2038-01-19">2024</time><br>
-				<strong class="timeline__title">Сбор задач, мониторинг состояния / выполнения. Таймеры и статистика текущих задач.</strong>
-			</span>
-		</div>
-		<div class="timeline__item-body" id="item6-ctrld" role="region" aria-labelledby="item6" aria-hidden="true">
-			<div class="timeline__item-body-content">
-<a href="pr.png">
-				<img src="pr.png" style="width: 100%;">
-</a>
-<a href="screen6.png">
-				<img src="screen6.png" style="width: 100%;">
-</a>
-<a href="screen4.png">
-				<img src="screen4.png" style="width: 100%;">
-</a>
-<a href="screen5.png">
-				<img src="screen5.png" style="width: 100%;">
-</a>
+    <!-- Фоновые орбы -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
 
-<a href="screen7.png">
-				<img src="screen7.png" style="width: 100%;">
-</a>
+    <!-- Канвас для частиц -->
+    <canvas id="particles-canvas"></canvas>
 
-			</div>
-		</div>
-	</div>
+    <!-- Скрытые SVG-символы -->
+    <svg class="hidden-svg" aria-hidden="true">
+        <symbol id="arrow">
+            <polyline points="7 10,12 15,17 10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></polyline>
+        </symbol>
+    </svg>
 
+    <!-- Контент -->
+    <div class="page-content">
+        <!-- Герой -->
+        <div class="hero">
+            <span class="subtitle-badge">Хронология развития</span>
+            <h1>История «ПМ» (Просто Мастер)</h1>
+        </div>
+        <div class="hero-card">
+            <h2>
+                Цель данного сервиса и мастера — выполнить Вашу работу по привлекательной цене, удобно, качественно и в шаговой доступности.<br>
+                В большинстве случаев <strong>меньше среднерыночной цены</strong> «частного мастера с объявления».<br>
+                Отправляете Задание в приложении (описание, фото) → Мастер получает Задание, созванивается с Вами и предварительно озвучивает стоимость работ → На месте подтверждает стоимость и <strong>выполняет работу</strong>.
+            </h2>
+        </div>
 
-	<div class="timeline__item">
-		<div class="timeline__item-header">
-			<button class="timeline__arrow" type="button" id="item7" aria-labelledby="item7-name" aria-expanded="false" aria-controls="item6-ctrld" aria-haspopup="true" data-item="7">
-				<svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
-					<use href="#arrow"></use>
-				</svg>
-			</button>
-			<span class="timeline__dot"></span>
-			<span id="item7-name" class="timeline__meta">
-				<time class="timeline__date" datetime="2038-01-19">2024</time><br>
-				<strong class="timeline__title">Франшиза</strong>
-			</span>
-		</div>
-		<div class="timeline__item-body" id="item7-ctrld" role="region" aria-labelledby="item7" aria-hidden="true">
-			<div class="timeline__item-body-content">
+        <!-- Таймлайн -->
+        <div id="timeline" class="timeline">
+            <!-- Кнопки управления -->
+            <div class="btn-group">
+                <button class="btn" type="button" data-action="expand">Развернуть всё</button>
+                <button class="btn" type="button" data-action="collapse">Свернуть всё</button>
+            </div>
 
-                 <span style="font-weight: 900;font-size: 2em;">
- &nbsp; &nbsp;Минимальные стартовые вложения для открытия полноценной мастерской составляют около 6 000 000 рублей. <br>
- &nbsp; &nbsp;В первые месяцы работы рентабельность фирмы не будет превышать 10%. <br>
- &nbsp; &nbsp;Но при правильном подходе к ценовой политике и высоком уровне сервиса вы сможете постепенно повышать прибыльность своего бизнеса.<br>
- &nbsp;Это направление относится к стабильным.
-                  </span>
-<p style="font-weight: 900;"> &nbsp; &nbsp;Если вы хотите инвестировать так, чтобы ваши деньги реально приносили дивиденды, то рассмотрите данное предложение <br>
+            <!-- Элемент 1: 2016 — Первая версия сайта -->
+            <div class="timeline__item" data-delay="0">
+                <div class="timeline__item-header" tabindex="0" role="button" aria-expanded="false">
+                    <button class="timeline__arrow" type="button" aria-label="Развернуть">
+                        <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                            <use href="#arrow"></use>
+                        </svg>
+                    </button>
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__meta">
+                        <time class="timeline__date" datetime="2016-01-01">2016</time>
+                        <strong class="timeline__title">Первая версия сайта</strong>
+                    </span>
+                </div>
+                <div class="timeline__item-body">
+                    <div class="timeline__item-body-content">
+                        <a href="1.png"><img src="1.png" alt="Первая версия сайта" loading="lazy"></a>
+                    </div>
+                </div>
+            </div>
 
- &nbsp; &nbsp;Штат сотрудников укомплектован, все готовы остаться и работать дальше <br>
+            <!-- Элемент 2: 2016 — Первая версия карты -->
+            <div class="timeline__item" data-delay="100">
+                <div class="timeline__item-header" tabindex="0" role="button" aria-expanded="false">
+                    <button class="timeline__arrow" type="button" aria-label="Развернуть">
+                        <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                            <use href="#arrow"></use>
+                        </svg>
+                    </button>
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__meta">
+                        <time class="timeline__date" datetime="2016-10-17">2016</time>
+                        <strong class="timeline__title">Первая версия карты</strong>
+                    </span>
+                </div>
+                <div class="timeline__item-body">
+                    <div class="timeline__item-body-content">
+                        <a href="2.png"><img src="2.png" alt="Первая версия карты" loading="lazy"></a>
+                    </div>
+                </div>
+            </div>
 
- &nbsp; &nbsp;Внедрена СRМ система, с помощью которой можно отследить данные о каждом заказе <br>
+            <!-- Элемент 3: 2017 — Вторая версия сайта -->
+            <div class="timeline__item" data-delay="200">
+                <div class="timeline__item-header" tabindex="0" role="button" aria-expanded="false">
+                    <button class="timeline__arrow" type="button" aria-label="Развернуть">
+                        <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                            <use href="#arrow"></use>
+                        </svg>
+                    </button>
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__meta">
+                        <time class="timeline__date" datetime="2017-09-09">2017</time>
+                        <strong class="timeline__title">Вторая версия сайта</strong>
+                    </span>
+                </div>
+                <div class="timeline__item-body">
+                    <div class="timeline__item-body-content">
+                        <a href="3.png"><img src="3.png" alt="Вторая версия сайта — скрин 1" loading="lazy"></a>
+                        <a href="4.png"><img src="4.png" alt="Вторая версия сайта — скрин 2" loading="lazy"></a>
+                        <a href="5.png"><img src="5.png" alt="Вторая версия сайта — скрин 3" loading="lazy"></a>
+                        <a href="6.png"><img src="6.png" alt="Вторая версия сайта — скрин 4" loading="lazy"></a>
+                    </div>
+                </div>
+            </div>
 
- &nbsp; &nbsp;Данное предложение подойдёт как новичку, так и опытному предпринимателю, который хочет переключиться на новое для себя направление <br>
+            <!-- Элемент 4: 2017 — Вторая версия карты -->
+            <div class="timeline__item" data-delay="300">
+                <div class="timeline__item-header" tabindex="0" role="button" aria-expanded="false">
+                    <button class="timeline__arrow" type="button" aria-label="Развернуть">
+                        <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                            <use href="#arrow"></use>
+                        </svg>
+                    </button>
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__meta">
+                        <time class="timeline__date" datetime="2017-02-13">2017</time>
+                        <strong class="timeline__title">Вторая версия карты</strong>
+                    </span>
+                </div>
+                <div class="timeline__item-body">
+                    <div class="timeline__item-body-content">
+                        <a href="8.png"><img src="8.png" alt="Вторая версия карты" loading="lazy"></a>
+                    </div>
+                </div>
+            </div>
 
- &nbsp; &nbsp;Сопровождение покупателя по времени не ограничено, никуда не переезжаем, будем рядом сколько потребуется <br>
+            <!-- Элемент 5: 2024 — Первая версия приложения -->
+            <div class="timeline__item" data-delay="400">
+                <div class="timeline__item-header" tabindex="0" role="button" aria-expanded="false">
+                    <button class="timeline__arrow" type="button" aria-label="Развернуть">
+                        <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                            <use href="#arrow"></use>
+                        </svg>
+                    </button>
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__meta">
+                        <time class="timeline__date" datetime="2024-05-18">2024</time>
+                        <strong class="timeline__title">Первая версия приложения</strong>
+                    </span>
+                </div>
+                <div class="timeline__item-body">
+                    <div class="timeline__item-body-content">
+                        <a href="screen1.png"><img src="screen1.png" alt="Приложение — скрин 1" loading="lazy"></a>
+                        <a href="screen2.png"><img src="screen3.png" alt="Приложение — скрин 2" loading="lazy"></a>
+                        <a href="screen3.png"><img src="screen2.png" alt="Приложение — скрин 3" loading="lazy"></a>
+                        <a href="15.jpg"><img src="15.jpg" alt="Приложение — скрин 4" loading="lazy"></a>
+                    </div>
+                </div>
+            </div>
 
- &nbsp; &nbsp;Не надо ничего выдумывать и начинать с нуля, тем более если у вас нет опыта, бизнес работает и приносит прибыль каждый день</p>
+            <!-- Элемент 6: 2024 — Сбор задач, мониторинг -->
+            <div class="timeline__item" data-delay="500">
+                <div class="timeline__item-header" tabindex="0" role="button" aria-expanded="false">
+                    <button class="timeline__arrow" type="button" aria-label="Развернуть">
+                        <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                            <use href="#arrow"></use>
+                        </svg>
+                    </button>
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__meta">
+                        <time class="timeline__date" datetime="2024-01-19">2024</time>
+                        <strong class="timeline__title">Сбор задач, мониторинг состояния / выполнения. Таймеры и статистика текущих задач.</strong>
+                    </span>
+                </div>
+                <div class="timeline__item-body">
+                    <div class="timeline__item-body-content">
+                        <a href="pr.png"><img src="pr.png" alt="Мониторинг — скрин 1" loading="lazy"></a>
+                        <a href="screen6.png"><img src="screen6.png" alt="Мониторинг — скрин 2" loading="lazy"></a>
+                        <a href="screen4.png"><img src="screen4.png" alt="Мониторинг — скрин 3" loading="lazy"></a>
+                        <a href="screen5.png"><img src="screen5.png" alt="Мониторинг — скрин 4" loading="lazy"></a>
+                        <a href="screen7.png"><img src="screen7.png" alt="Мониторинг — скрин 5" loading="lazy"></a>
+                    </div>
+                </div>
+            </div>
 
-                          <a href="P9M.JPG">
-                               <img src="P9M.JPG" style="width: 100%;">
-                           </a>
+            <!-- Элемент 7: 2024 — Франшиза -->
+            <div class="timeline__item" data-delay="600">
+                <div class="timeline__item-header" tabindex="0" role="button" aria-expanded="false">
+                    <button class="timeline__arrow" type="button" aria-label="Развернуть">
+                        <svg class="timeline__arrow-icon" viewBox="0 0 24 24" width="24px" height="24px">
+                            <use href="#arrow"></use>
+                        </svg>
+                    </button>
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__meta">
+                        <time class="timeline__date" datetime="2024-01-19">2024</time>
+                        <strong class="timeline__title">Франшиза</strong>
+                    </span>
+                </div>
+                <div class="timeline__item-body">
+                    <div class="timeline__item-body-content">
+                        <div class="franchise-text">
+                            <span class="big-stat">Минимальные стартовые вложения для открытия полноценной мастерской составляют около 6 000 000 рублей.</span>
+                            <span>В первые месяцы работы рентабельность фирмы не будет превышать 10%.</span>
+                            <span>Но при правильном подходе к ценовой политике и высоком уровне сервиса вы сможете постепенно повышать прибыльность своего бизнеса.</span>
+                            <span><strong>Это направление относится к стабильным.</strong></span>
+                            <p>Если вы хотите инвестировать так, чтобы ваши деньги реально приносили дивиденды, то рассмотрите данное предложение.</p>
+                            <p>Штат сотрудников укомплектован, все готовы остаться и работать дальше.</p>
+                            <p>Внедрена CRM система, с помощью которой можно отследить данные о каждом заказе.</p>
+                            <p>Данное предложение подойдёт как новичку, так и опытному предпринимателю, который хочет переключиться на новое для себя направление.</p>
+                            <p>Сопровождение покупателя по времени не ограничено, никуда не переезжаем, будем рядом сколько потребуется.</p>
+                            <p>Не надо ничего выдумывать и начинать с нуля, тем более если у вас нет опыта, бизнес работает и приносит прибыль каждый день.</p>
+                        </div>
+                        <a href="P9M.JPG"><img src="P9M.JPG" alt="Франшиза — изображение 1" loading="lazy"></a>
+                        <a href="fransh.jpg"><img src="fransh.jpg" alt="Франшиза — изображение 2" loading="lazy"></a>
+                        <a href="Y.jpg"><img src="Y.jpg" alt="Франшиза — изображение 3" loading="lazy"></a>
+                        <a href="deal.png"><img src="212.png" alt="Сделка с ЭЦП" loading="lazy" style="background:white;"></a>
+                        <p style="font-weight:900;text-align:center;background-color:white;color:#4f4f4f;font-size:1.2em;border-radius:0 0 10px 10px;padding:10px;width:100%;margin:0;">С помощью ЭЦП</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                          <a href="fransh.jpg">
-                               <img src="fransh.jpg" style="width: 100%;">
-                           </a>
+        <!-- CTA -->
+        <div class="cta-wrapper">
+            <a href="https://t.me/ProstoMasterTelegram_bot/site" class="cta-button" title="Перейти в Telegram бот" aria-label="Перейти в Telegram бот">
+                +
+            </a>
+        </div>
+    </div>
 
-                        <a href="Y.jpg">
-                               <img src="Y.jpg" style="width: 100%;">
-                             </a>
+    <script>
+        (function() {
+            // ============ ЧАСТИЦЫ НА ФОНЕ ============
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 70;
+            let animationId;
 
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = document.documentElement.scrollHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initParticles();
+            });
 
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.4;
+                    this.speedY = (Math.random() - 0.5) * 0.4 - 0.2;
+                    this.opacity = Math.random() * 0.5 + 0.15;
+                    this.pulseSpeed = Math.random() * 0.02 + 0.005;
+                    this.pulseOffset = Math.random() * Math.PI * 2;
+                }
+                update(time) {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.opacity = 0.15 + Math.sin(time * this.pulseSpeed + this.pulseOffset) * 0.2 + 0.2;
+                    if (this.x < -20) this.x = canvas.width + 20;
+                    if (this.x > canvas.width + 20) this.x = -20;
+                    if (this.y < -20) this.y = canvas.height + 20;
+                    if (this.y > canvas.height + 20) this.y = -20;
+                }
+                draw(ctx) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(180,200,255,${Math.max(0.05, this.opacity)})`;
+                    ctx.fill();
+                }
+            }
 
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+            initParticles();
 
-                        <a href="deal.png">
-                               <img src="212.png" style="width: 100%;background:white;">
-                             </a>
-<p style="font-weight: 900;text-align:center;background-color: white;color: #4f4f4f;font-size: 1.4em;border-radius: 0px 0px 10px 10px;">C помощью ЭЦП</p>
-<!--
-                        <a href="sig.jpg">
-                               <img src="27.png" style="width: 100%;">
-                               <img src="sig.jpg" style="width: 100%;">
-                             </a>
--->
-				<!--
-				<img src="screen6.png" style="width: 100%;">
-				<img src="screen4.png" style="width: 100%;">
-				<img src="screen5.png" style="width: 100%;">
-				<img src="screen7.png" style="width: 100%;">
-			    -->
-			</div>
-		</div>
-	</div>
+            function animateParticles(time) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update(time);
+                    p.draw(ctx);
+                });
+                // Рисуем соединительные линии между близкими частицами
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(150,180,230,${0.04 * (1 - dist / 100)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                animationId = requestAnimationFrame(animateParticles);
+            }
+            animationId = requestAnimationFrame(animateParticles);
 
+            // Обновление высоты канваса при скролле (если контент динамический)
+            const resizeObserver = new ResizeObserver(() => {
+                canvas.height = document.documentElement.scrollHeight;
+            });
+            resizeObserver.observe(document.body);
 
-</div>
-<!-- partial -->
+            // ============ ПРОГРЕСС-БАР ============
+            const progressBar = document.getElementById('progress-bar');
+            function updateProgressBar() {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                progressBar.style.width = Math.min(100, progress) + '%';
+            }
+            window.addEventListener('scroll', updateProgressBar, { passive: true });
+            updateProgressBar();
 
+            // ============ ТАЙМЛАЙН: РАЗВОРОТ/СВОРОТ ============
+            const timeline = document.getElementById('timeline');
+            const allItems = timeline.querySelectorAll('.timeline__item');
 
-<center>
-	<a href="https://t.me/ProstoMasterTelegram_bot/site" style="text-decoration: unset;color: white;">
-<h1 style="
-background-color: white;
-color: black;
-padding: unset;
-width: 13%;
-border-radius: 10px;
-font-size: 1.5em;
-">+</h1>
-	</a>
-	</center>
+            function getBodyContent(item) {
+                return item.querySelector('.timeline__item-body');
+            }
 
+            function getBodyContentWrapper(item) {
+                return item.querySelector('.timeline__item-body-content');
+            }
 
+            function expandItem(item, animate = true) {
+                const body = getBodyContent(item);
+                const wrapper = getBodyContentWrapper(item);
+                if (!body || item.classList.contains('expanded')) return;
 
+                item.classList.add('expanded');
+                const header = item.querySelector('.timeline__item-header');
+                if (header) header.setAttribute('aria-expanded', 'true');
 
-  <script src="./script.js"></script>
+                if (animate) {
+                    // Получаем реальную высоту контента
+                    body.style.maxHeight = 'none';
+                    const realHeight = body.scrollHeight;
+                    body.style.maxHeight = '0px';
+                    // Форсируем рефлоу
+                    body.offsetHeight;
+                    body.style.maxHeight = realHeight + 'px';
 
+                    // После завершения анимации убираем ограничение
+                    const onTransitionEnd = () => {
+                        body.style.maxHeight = 'none';
+                        body.removeEventListener('transitionend', onTransitionEnd);
+                    };
+                    body.addEventListener('transitionend', onTransitionEnd, { once: true });
 
+                    // Запасной таймер
+                    setTimeout(() => {
+                        if (body.style.maxHeight !== 'none' && item.classList.contains('expanded')) {
+                            body.style.maxHeight = 'none';
+                        }
+                    }, 700);
+                } else {
+                    body.style.transition = 'none';
+                    body.style.maxHeight = 'none';
+                    body.style.opacity = '1';
+                    body.offsetHeight;
+                    body.style.transition = '';
+                }
+            }
 
-</body></html>
+            function collapseItem(item, animate = true) {
+                const body = getBodyContent(item);
+                if (!body || !item.classList.contains('expanded')) return;
+
+                if (animate) {
+                    const currentHeight = body.scrollHeight;
+                    body.style.maxHeight = currentHeight + 'px';
+                    body.offsetHeight;
+                    body.style.maxHeight = '0px';
+                } else {
+                    body.style.transition = 'none';
+                    body.style.maxHeight = '0px';
+                    body.style.opacity = '0';
+                    body.offsetHeight;
+                    body.style.transition = '';
+                }
+
+                item.classList.remove('expanded');
+                const header = item.querySelector('.timeline__item-header');
+                if (header) header.setAttribute('aria-expanded', 'false');
+
+                // Очистка после анимации
+                const onTransitionEnd = () => {
+                    if (!item.classList.contains('expanded')) {
+                        body.style.maxHeight = '0px';
+                    }
+                    body.removeEventListener('transitionend', onTransitionEnd);
+                };
+                body.addEventListener('transitionend', onTransitionEnd, { once: true });
+
+                setTimeout(() => {
+                    if (!item.classList.contains('expanded')) {
+                        body.style.maxHeight = '0px';
+                    }
+                }, 700);
+            }
+
+            function toggleItem(item) {
+                if (item.classList.contains('expanded')) {
+                    collapseItem(item);
+                } else {
+                    expandItem(item);
+                }
+            }
+
+            // Обработчики кликов на заголовки
+            allItems.forEach(item => {
+                const header = item.querySelector('.timeline__item-header');
+                if (header) {
+                    header.addEventListener('click', (e) => {
+                        // Не срабатывает, если кликнули по ссылке внутри
+                        if (e.target.closest('a')) return;
+                        toggleItem(item);
+                    });
+                    // Клавиатурная доступность
+                    header.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            if (e.target.closest('a')) return;
+                            toggleItem(item);
+                        }
+                    });
+                }
+            });
+
+            // Кнопки "Развернуть всё" / "Свернуть всё"
+            const expandAllBtn = timeline.querySelector('[data-action="expand"]');
+            const collapseAllBtn = timeline.querySelector('[data-action="collapse"]');
+
+            if (expandAllBtn) {
+                expandAllBtn.addEventListener('click', () => {
+                    allItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            if (!item.classList.contains('expanded')) {
+                                expandItem(item);
+                            }
+                        }, index * 80);
+                    });
+                });
+            }
+            if (collapseAllBtn) {
+                collapseAllBtn.addEventListener('click', () => {
+                    allItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            if (item.classList.contains('expanded')) {
+                                collapseItem(item);
+                            }
+                        }, index * 50);
+                    });
+                });
+            }
+
+            // ============ SCROLL-АНИМАЦИИ (Intersection Observer) ============
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -60px 0px',
+                threshold: 0.15,
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const item = entry.target;
+                        const delay = parseInt(item.getAttribute('data-delay')) || 0;
+                        setTimeout(() => {
+                            item.classList.add('revealed');
+                        }, delay);
+                        observer.unobserve(item);
+                    }
+                });
+            }, observerOptions);
+
+            allItems.forEach(item => {
+                observer.observe(item);
+            });
+
+            // Сразу показываем первые элементы, которые видны
+            setTimeout(() => {
+                allItems.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        const delay = parseInt(item.getAttribute('data-delay')) || 0;
+                        setTimeout(() => {
+                            item.classList.add('revealed');
+                        }, delay);
+                        observer.unobserve(item);
+                    }
+                });
+            }, 200);
+
+            // ============ ПАРАЛЛАКС ДЛЯ ОРБОВ ============
+            const orbs = document.querySelectorAll('.bg-orb');
+            let parallaxTicking = false;
+            window.addEventListener('scroll', () => {
+                if (!parallaxTicking) {
+                    requestAnimationFrame(() => {
+                        const scrollY = window.scrollY;
+                        orbs.forEach((orb, i) => {
+                            const speed = (i + 1) * 0.03;
+                            orb.style.transform = orb.style.transform.replace(
+                                /translateY\([^)]+\)/,
+                                `translateY(${scrollY * speed}px)`
+                            );
+                        });
+                        parallaxTicking = false;
+                    });
+                    parallaxTicking = true;
+                }
+            }, { passive: true });
+
+            // ============ ОБРАБОТКА ОШИБОК ЗАГРУЗКИ ИЗОБРАЖЕНИЙ ============
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('error', function() {
+                    this.style.background = 'rgba(255,255,255,0.03)';
+                    this.style.minHeight = '150px';
+                    this.style.display = 'flex';
+                    this.style.alignItems = 'center';
+                    this.style.justifyContent = 'center';
+                    this.style.color = 'rgba(255,255,255,0.3)';
+                    this.style.fontSize = '0.8rem';
+                    this.alt = this.alt || 'Изображение недоступно';
+                    // Показываем alt-текст через псевдо-элемент не можем, просто оставляем стиль
+                    this.style.border = '1px dashed rgba(255,255,255,0.15)';
+                });
+            });
+
+            console.log('✨ Таймлайн «История ПМ» готов. Дизайн в духе Awwwards / Behance / Dribbble.');
+        })();
+    </script>
+</body>
+</html>
